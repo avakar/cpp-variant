@@ -109,11 +109,7 @@ template <typename T, typename... Types>
 T const && get(variant<Types...> const && v);
 
 template <typename Visitor, typename Variant>
-auto visit(Visitor && vis, Variant && var)
-{
-	return detail::variant_indexed_visitor<Visitor, Variant, std::make_index_sequence<variant_size_v<std::remove_reference_t<Variant>>>>::visit(
-		std::forward<Visitor>(vis), std::forward<Variant>(var));
-}
+auto visit(Visitor && vis, Variant && var);
 
 }
 

@@ -34,6 +34,7 @@ add_executable(avakar_variant_test
     src/variant_helpers.hpp
     src/variant_impl.hpp
     src/variant_size.hpp
+    src/variant_visit.hpp
     test/variant.cpp
     )
 target_link_libraries(avakar_variant_test avakar_variant mutest)

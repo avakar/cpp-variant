@@ -1,4 +1,5 @@
 #include <new>
+#include "variant_visit.hpp"
 
 template <typename... Types>
 void * avakar::detail::variant_storage_accessor<Types...>::get(variant<Types...> & v)
@@ -222,4 +223,11 @@ T const && avakar::get(variant<Types...> const && v)
 		throw bad_variant_access();
 	return std::move(*static_cast<T const *>(
 		detail::variant_storage_accessor<Types...>::get(v)));
+}
+
+template <typename Visitor, typename Variant>
+auto avakar::visit(Visitor && vis, Variant && var)
+{
+	return detail::variant_indexed_visitor<Visitor, Variant, std::make_index_sequence<variant_size_v<std::remove_reference_t<Variant>>>>::visit(
+		std::forward<Visitor>(vis), std::forward<Variant>(var));
 }
