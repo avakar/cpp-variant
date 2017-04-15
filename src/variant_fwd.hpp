@@ -1,6 +1,8 @@
 #ifndef AVAKAR_VARIANT_VARIANT_FWD_HPP
 #define AVAKAR_VARIANT_VARIANT_FWD_HPP
 
+#include <stdlib.h>
+
 namespace avakar {
 
 template <typename... Types>
