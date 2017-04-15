@@ -127,7 +127,7 @@ template <size_t I, typename U, typename... Args>
 auto avakar::variant<Types...>::emplace(std::initializer_list<U> il, Args &&... args)
 	-> variant_alternative_t<I, variant> &
 {
-	detail::variant_storage_destroyer<Types...>::destroy(&storage_, index_);
+	visit([](auto & v) { detail::destroy_at(&v); }, *this);
 	index_ = variant_npos;
 
 	auto * r = new(&storage_) variant_alternative_t<I, variant>(il, std::forward<Args>(args)...);

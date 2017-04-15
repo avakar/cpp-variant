@@ -21,6 +21,13 @@ struct counting
 	size_t & counter_;
 };
 
+struct init_list
+{
+	init_list(std::initializer_list<int> il)
+	{
+	}
+};
+
 }
 
 TEST("variant<1> can default construct")
@@ -250,6 +257,14 @@ TEST("variant::emplace<T> works")
 	v.emplace<long>(2);
 	chk v.index() == 1;
 	chk get<1>(v) == 2;
+}
+
+TEST("variant::emplace with initializer list")
+{
+	avakar::variant<int, init_list> v;
+
+	v.emplace<init_list>({ 1, 2, 3 });
+	chk v.index() == 1;
 }
 
 TEST("variant::visit<2> works")
