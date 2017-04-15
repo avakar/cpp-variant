@@ -5,7 +5,7 @@
     }
   }, 
   "_deps/cppmutest": {
-    "commit": "f845421d0667a156ca69738fcb80bd8b3361b1a5", 
+    "commit": "4871c7935c70a21606a68af6952931f68660cb54", 
     "type": "git", 
     "url": "https://github.com/avakar/cppmutest.git"
   }
