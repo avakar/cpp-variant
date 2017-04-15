@@ -1,0 +1,9 @@
+#include <avakar/monostate.hpp>
+#include <avakar/variant.hpp>
+
+namespace std {
+
+using ::avakar::monostate;
+using ::avakar::variant;
+
+}
