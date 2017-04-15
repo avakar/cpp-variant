@@ -70,14 +70,20 @@ struct variant_index
 	}
 };
 
+template <typename F, typename... Args>
+auto invoke(F && f, Args &&... args)
+{
+	return std::forward<F>(f)(std::forward<Args>(args)...);
+}
+
 template <size_t I, typename Visitor, typename Variant>
 struct variant_one_visitor
 {
-	using return_type = decltype(std::invoke(std::declval<Visitor>(), get<I>(std::declval<Variant>())));
+	using return_type = decltype(invoke(std::declval<Visitor>(), get<I>(std::declval<Variant>())));
 
 	static return_type visit(Visitor && vis, Variant && var)
 	{
-		return std::invoke(std::forward<Visitor>(vis), get<I>(var));
+		return invoke(std::forward<Visitor>(vis), get<I>(var));
 	}
 };
 
