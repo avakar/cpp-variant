@@ -10,6 +10,7 @@
 #include "../../src/variant_helpers.hpp"
 
 #include <exception>
+#include <utility>
 
 namespace avakar {
 
@@ -20,6 +21,24 @@ struct in_place_index_t
 
 template <typename T>
 struct in_place_type_t
+{
+};
+
+template <typename T>
+struct is_in_place
+	: std::false_type
+{
+};
+
+template <size_t I>
+struct is_in_place<in_place_index_t<I>>
+	: std::true_type
+{
+};
+
+template <typename T>
+struct is_in_place<in_place_type_t<T>>
+	: std::true_type
 {
 };
 
@@ -37,9 +56,6 @@ struct variant
 	variant(variant const & o);
 	variant(variant && o);
 
-	variant & operator=(variant const & o);
-	variant & operator=(variant && o);
-
 	template <typename T, typename... Args,
 		typename = std::enable_if_t<detail::variant_index<T, Types...>::unique>>
 	explicit variant(in_place_type_t<T>, Args &&... args);
@@ -54,7 +70,22 @@ struct variant
 	template <size_t I, typename U, typename... Args>
 	explicit variant(in_place_index_t<I>, std::initializer_list<U> il, Args &&... args);
 
+	template <typename T,
+		typename = std::enable_if_t<
+			!std::is_same<std::decay_t<T>, variant>::value
+			&& !is_in_place<T>::value
+			&& detail::variant_overload_sandbox<Types...>::template is_constructible<T>::value
+			&& detail::variant_index<typename detail::variant_overload_sandbox<Types...>::template T_j<T>, Types...>::unique
+		>>
+	variant(T && t)
+		: variant(in_place_type_t<typename detail::variant_overload_sandbox<Types...>::template T_j<T>>(), std::forward<T>(t))
+	{
+	}
+
 	~variant();
+
+	variant & operator=(variant const & o);
+	variant & operator=(variant && o);
 
 	template <typename T, typename... Args,
 		typename = std::enable_if_t<detail::variant_index<T, Types...>::unique>>

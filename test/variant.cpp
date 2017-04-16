@@ -277,3 +277,26 @@ TEST("variant::visit<2> works")
 	chk visit(fn, v) == 1;
 
 }
+
+TEST("variant's conversion constructor")
+{
+	{
+		avakar::variant<int, void *> v = 1;
+		chk v.index() == 0;
+		chk get<int>(v) == 1;
+	}
+
+	{
+		avakar::variant<int, void *> v = nullptr;
+		chk v.index() == 1;
+		chk get<void *>(v) == nullptr;
+	}
+
+	{
+		avakar::variant<int, long> v = 1;
+		chk v.index() == 0;
+		chk get<int>(v) == 1;
+	}
+
+	// FAILS: avakar::variant<int, int> v = 1;
+}

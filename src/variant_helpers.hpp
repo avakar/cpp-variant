@@ -71,5 +71,28 @@ struct variant_index
 	}
 };
 
+template <typename... Types>
+struct variant_overload_sandbox;
+
+template <>
+struct variant_overload_sandbox<>
+{
+	static void f();
+};
+
+template <typename T0, typename... Types>
+struct variant_overload_sandbox<T0, Types...>
+	: variant_overload_sandbox<Types...>
+{
+	using variant_overload_sandbox<Types...>::f;
+	static T0 f(T0);
+
+	template <typename T>
+	using T_j = decltype(variant_overload_sandbox::f(std::declval<T>()));
+
+	template <typename T>
+	using is_constructible = std::is_constructible<T_j<T>, T>;
+};
+
 }
 }
